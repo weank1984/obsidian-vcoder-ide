@@ -12,24 +12,15 @@ Connect an Obsidian vault to the [vcoder](https://code.voyah.com) CLI through `/
 
 ## Install
 
-This plugin is distributed privately with [BRAT](https://github.com/TfTHacker/obsidian42-brat). It is not listed in the Obsidian community directory.
+This plugin is distributed with [BRAT](https://github.com/TfTHacker/obsidian42-brat). It is not listed in the Obsidian community directory.
 
 ### With BRAT (recommended, auto-updates)
 
-1. **Get access.** Ask the repo owner to add you as a collaborator on `weank1984/obsidian-vcoder-ide`.
-2. **Create a GitHub token.**
-   - Go to GitHub → Settings → Developer settings → **Fine-grained token**.
-   - Repository access: only this repo.
-   - Permission: **Contents: Read-only**.
-3. **Install BRAT.** In Obsidian, open **Settings → Community plugins → Browse**, then install and enable **BRAT**.
-4. **Add the token.** In BRAT settings, paste the token into **Personal access token**.
-5. **Add the plugin.**
-   - Run **BRAT: Add a beta plugin for testing**.
-   - Enter `weank1984/obsidian-vcoder-ide`.
-   - Choose the latest version.
-6. **Enable it.** Turn on **vcoder IDE** under **Settings → Community plugins**.
+1. In Obsidian, open **Settings → Community plugins → Browse**, then install and enable **BRAT**.
+2. Run **BRAT: Add a beta plugin for testing**. Enter `weank1984/obsidian-vcoder-ide` and choose the latest version.
+3. Enable **vcoder IDE** under **Settings → Community plugins**.
 
-BRAT checks for new releases on startup. You can also run **BRAT: Check for updates to all beta plugins** to update now.
+No GitHub token is needed; the repository is public. BRAT checks for new releases on startup. You can also run **BRAT: Check for updates to all beta plugins** to update now.
 
 ### Manual
 
