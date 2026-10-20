@@ -1,4 +1,4 @@
-# vcoder IDE for Obsidian
+# VCoder IDE for Obsidian
 
 Connect an Obsidian vault to the **vcoder** CLI through its `/ide` command. Obsidian then acts as vcoder's IDE:
 
@@ -21,7 +21,7 @@ The plugin does nothing on its own. It only serves a vcoder session running on t
 
 ## Install
 
-1. In Obsidian, open **Settings → Community plugins → Browse** and search for **vcoder IDE**.
+1. In Obsidian, open **Settings → Community plugins → Browse** and search for **VCoder IDE**.
 2. Install the plugin, then enable it.
 
 **Manual install:**

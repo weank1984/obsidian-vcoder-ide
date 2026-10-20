@@ -25,7 +25,7 @@ export default class VcoderIdePlugin extends Plugin {
     await this.loadSettings()
     const adapter = this.app.vault.adapter
     if (!(adapter instanceof FileSystemAdapter)) {
-      new Notice('vcoder IDE requires the desktop app.')
+      new Notice('VCoder IDE requires the desktop app.')
       return
     }
     this.vaultRoot = adapter.getBasePath()
@@ -101,7 +101,7 @@ export default class VcoderIdePlugin extends Plugin {
       )
     } catch (err) {
       console.error('[vcoder-ide] failed to start', err)
-      new Notice(`vcoder IDE failed to start: ${err instanceof Error ? err.message : String(err)}`)
+      new Notice(`VCoder IDE failed to start: ${err instanceof Error ? err.message : String(err)}`)
       await server.stop()
       this.server = undefined
     }
@@ -120,7 +120,7 @@ export default class VcoderIdePlugin extends Plugin {
   async restartServer(): Promise<void> {
     await this.stopServer()
     await this.startServer()
-    new Notice(`vcoder IDE listening on port ${this.port ?? '—'}`)
+    new Notice(`VCoder IDE listening on port ${this.port ?? '—'}`)
   }
 
   statusText(): string {
