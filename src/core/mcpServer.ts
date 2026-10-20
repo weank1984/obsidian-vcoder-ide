@@ -2,7 +2,7 @@ import { EventEmitter } from 'node:events'
 import type { IncomingMessage } from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { timingSafeEqual } from 'node:crypto'
-import { WebSocket, WebSocketServer } from 'ws'
+import { type RawData, WebSocket, WebSocketServer } from 'ws'
 import { fail, type ToolResult } from './protocol'
 
 export const AUTH_HEADER = 'x-claude-code-ide-authorization'
@@ -137,7 +137,7 @@ export class McpWebSocketServer extends EventEmitter {
     this.aborters.set(ws, new AbortController())
     ws.on('message', (data, isBinary) => {
       if (isBinary) return
-      void this.onMessage(ws, data.toString())
+      void this.onMessage(ws, rawDataToString(data))
     })
     ws.on('close', () => {
       this.aborters.get(ws)?.abort()
@@ -160,17 +160,18 @@ export class McpWebSocketServer extends EventEmitter {
   }
 
   private async onMessage(ws: WebSocket, raw: string): Promise<void> {
-    let msg: JsonRpcRequest
+    let parsed: unknown
     try {
-      msg = JSON.parse(raw)
+      parsed = JSON.parse(raw)
     } catch {
       this.replyError(ws, null, -32700, 'Parse error')
       return
     }
-    if (!msg || typeof msg !== 'object' || typeof msg.method !== 'string') {
+    if (!isRequestLike(parsed)) {
       // Responses to server-initiated requests (we send none) or garbage.
       return
     }
+    const msg = parsed
     const isRequest = msg.id !== undefined && msg.id !== null
     try {
       if (!isRequest) {
@@ -249,4 +250,14 @@ export class McpWebSocketServer extends EventEmitter {
 
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err)
+}
+
+function isRequestLike(v: unknown): v is JsonRpcRequest {
+  return typeof v === 'object' && v !== null && typeof (v as { method?: unknown }).method === 'string'
+}
+
+function rawDataToString(data: RawData): string {
+  if (Array.isArray(data)) return Buffer.concat(data).toString('utf8')
+  if (data instanceof ArrayBuffer) return Buffer.from(new Uint8Array(data)).toString('utf8')
+  return data.toString('utf8')
 }

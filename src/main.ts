@@ -61,8 +61,9 @@ export default class VcoderIdePlugin extends Plugin {
     })
   }
 
-  async onunload(): Promise<void> {
-    await this.stopServer()
+  onunload(): void {
+    // stopServer removes the lockfile synchronously before closing sockets.
+    void this.stopServer()
     this.selection?.dispose()
   }
 
@@ -158,8 +159,8 @@ export default class VcoderIdePlugin extends Plugin {
       },
     })
     this.addCommand({
-      id: 'copy-launch-command',
-      name: 'Copy vcoder launch command for this vault',
+      id: 'copy-launch',
+      name: 'Copy vcoder launch line for this vault',
       callback: () => void this.copyLaunchCommand(),
     })
     this.addCommand({

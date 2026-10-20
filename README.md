@@ -1,6 +1,6 @@
 # vcoder IDE for Obsidian
 
-Connect an Obsidian vault to the [vcoder](https://code.voyah.com) CLI through `/ide`. Obsidian then acts as vcoder's IDE:
+Connect an Obsidian vault to the **vcoder** CLI through its `/ide` command. Obsidian then acts as vcoder's IDE:
 
 | Capability | What happens |
 |---|---|
@@ -10,26 +10,26 @@ Connect an Obsidian vault to the [vcoder](https://code.voyah.com) CLI through `/
 | **Note diagnostics** | `getDiagnostics` reports unresolved `[[links]]` / `![[embeds]]`, missing `#heading` / `#^block` targets, invalid or duplicate frontmatter keys, unclosed code fences, heading level skips and duplicate headings. vcoder sees any *new* problems its edits introduce automatically. |
 | **openFile** | The model can open a note and highlight a passage for you. |
 
+## Requirements
+
+- **Obsidian desktop** 1.7.2 or later. Mobile is not supported.
+- **vcoder CLI** 2.1.282 or later. vcoder is an AI coding agent for the terminal. Install it from either source:
+  - Native binary: [weank1984/vcoder-releases](https://github.com/weank1984/vcoder-releases/releases)
+  - Node.js package: `npm install -g @voyah-ai/vcoder-node`
+
+The plugin does nothing on its own. It only serves a vcoder session running on the same machine.
+
 ## Install
 
-This plugin is distributed with [BRAT](https://github.com/TfTHacker/obsidian42-brat). It is not listed in the Obsidian community directory.
+1. In Obsidian, open **Settings → Community plugins → Browse** and search for **vcoder IDE**.
+2. Install the plugin, then enable it.
 
-### With BRAT (recommended, auto-updates)
-
-1. In Obsidian, open **Settings → Community plugins → Browse**, then install and enable **BRAT**.
-2. Run **BRAT: Add a beta plugin for testing**. Enter `weank1984/obsidian-vcoder-ide` and choose the latest version.
-3. Enable **vcoder IDE** under **Settings → Community plugins**.
-
-No GitHub token is needed; the repository is public. BRAT checks for new releases on startup. You can also run **BRAT: Check for updates to all beta plugins** to update now.
-
-### Manual
-
+**Manual install:**
 1. Download `main.js`, `manifest.json` and `styles.css` from the latest [release](https://github.com/weank1984/obsidian-vcoder-ide/releases).
 2. Put them in `<vault>/.obsidian/plugins/vcoder-ide/`.
 3. Enable the plugin.
 
-### From source (development)
-
+**From source (development):**
 1. Run `npm install && npm run build`.
 2. Symlink `main.js`, `manifest.json` and `styles.css` into `<vault>/.obsidian/plugins/vcoder-ide/`.
 
@@ -48,7 +48,7 @@ vcoder          # then run /ide and pick "Obsidian"
   - Answering in the terminal closes the Obsidian tab.
   - The diff only opens when vcoder asks for permission. In auto-accept modes, edits are applied directly.
   - To turn the diff off, set **Diff tool → terminal** in vcoder `/config`.
-- **openFile** requires vcoder ≥ the version that allows `mcp__ide__openFile` (internal allowlist).
+- **openFile** needs vcoder 2.1.282 or later. Older versions do not expose this tool to the model.
 
 ## Settings
 
@@ -58,6 +58,15 @@ vcoder          # then run /ide and pick "Obsidian"
 | **Share active note** | Sends the open note even when nothing is selected. |
 | **Diff layout** | Unified or side by side. |
 | **Diagnostics** | Turn each of the four rule groups on or off, and set the vault scan limit. |
+
+## Relation to other plugins
+
+[Claude Code IDE](https://github.com/petersolopov/obsidian-claude-ide) connects Obsidian to Anthropic's Claude Code. This plugin connects to **vcoder** instead. Each CLI discovers IDEs through its own lockfile directory, so the two plugins do not interfere and can be installed side by side.
+
+This plugin is an independent implementation. It is not a fork and shares no code. Besides selection sharing, it adds:
+- in-Obsidian diff review
+- note diagnostics
+- `openFile`
 
 ## Network use and files outside the vault
 
@@ -85,20 +94,21 @@ The plugin implements the vcoder IDE contract:
 
 ```sh
 npm run dev        # esbuild watch → main.js
+npm run lint       # eslint-plugin-obsidianmd (same rules as the community directory review)
 npm test           # vitest: lockfile, MCP server wire contract, diff, diagnostics rules
 npm run build      # tsc + production bundle
 npm run fake-ide -- /tmp/vault   # headless IDE peer (FAKE_IDE_DIFF=accept|reject|hold) for testing a real vcoder CLI
 ```
 
-### Releasing
-
-```sh
-npm run release -- 0.1.1   # bump manifest/versions/package, test, build, commit, tag
-git push --follow-tags     # CI (.github/workflows/release.yml) publishes the GitHub release
-```
-
-The tag must equal the `manifest.json` version, with no `v` prefix. BRAT users get the new version on their next update check.
-
 - `src/core/` has no Obsidian imports and is fully unit tested.
 - `src/obsidian/` is the adapter layer (views, editor extension, metadata cache).
 - `test-vault/` contains seeded problems for every diagnostic rule. Symlink this repo to `test-vault/.obsidian/plugins/vcoder-ide` and open the folder as a vault.
+
+### Releasing
+
+```sh
+npm run release -- 0.1.1   # bump manifest/versions/package, lint, test, build, commit, tag
+git push --follow-tags     # CI (.github/workflows/release.yml) publishes the GitHub release
+```
+
+The tag must equal the `manifest.json` version, with no `v` prefix. Obsidian installs and updates the plugin from the release that matches this version.

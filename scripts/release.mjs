@@ -33,6 +33,7 @@ pkg.version = version
 writeJson('package.json', pkg)
 
 sh('npm install --package-lock-only --silent')
+sh('npm run lint')
 sh('npm test')
 sh('npm run build')
 sh('git add manifest.json versions.json package.json package-lock.json')
