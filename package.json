@@ -22,7 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "diff": "^8.0.2",
-    "ws": "8.20.0"
+    "ws": "8.22.0"
   },
   "devDependencies": {
     "@codemirror/state": "^6.5.0",

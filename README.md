@@ -68,10 +68,12 @@ This plugin is an independent implementation. It is not a fork and shares no cod
 - note diagnostics
 - `openFile`
 
-## Network use and files outside the vault
+## Network use, file system and clipboard access
 
 - **Network.** The plugin runs a WebSocket server on **127.0.0.1 only**. Only the vcoder CLI on the same machine connects to it. The plugin makes no outbound requests and contacts no remote services.
-- **Files outside the vault.** The plugin writes one lockfile, `~/.vcoder/ide/<port>.lock` (or `$VCODER_HOME/ide`). vcoder reads this file to discover the running Obsidian instance. The plugin deletes it when it unloads.
+- **Files outside the vault (Node `fs`).** The plugin writes one lockfile, `~/.vcoder/ide/<port>.lock` (or `$VCODER_HOME/ide`, or the **Lockfile directory** setting). vcoder reads this file to discover the running Obsidian instance. The plugin deletes it when it unloads. It reads or writes no other files outside the vault.
+- **Vault enumeration.** When vcoder calls `getDiagnostics` without a file, the plugin lists the vault's Markdown notes and checks them, up to the **Vault scan limit** (default 5000). The results go only to the local vcoder session.
+- **Clipboard.** The plugin only *writes* to the clipboard, and only when you click the status bar item or run **Copy vcoder launch line for this vault**. It copies the launch command. It never reads the clipboard.
 
 ## Security
 
@@ -108,7 +110,7 @@ npm run fake-ide -- /tmp/vault   # headless IDE peer (FAKE_IDE_DIFF=accept|rejec
 
 ```sh
 npm run release -- 0.1.1   # bump manifest/versions/package, lint, test, build, commit, tag
-git push --follow-tags     # CI (.github/workflows/release.yml) publishes the GitHub release
+git push && git push origin 0.1.1   # push the tag on its own; CI (.github/workflows/release.yml) publishes the release
 ```
 
-The tag must equal the `manifest.json` version, with no `v` prefix. Obsidian installs and updates the plugin from the release that matches this version.
+The tag must equal the `manifest.json` version, with no `v` prefix. Obsidian installs and updates the plugin from the release that matches this version. The release workflow adds GitHub build provenance attestations for `main.js`, `manifest.json` and `styles.css` (verify with `gh attestation verify main.js -R weank1984/obsidian-vcoder-ide`).

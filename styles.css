@@ -8,7 +8,10 @@
 .vcoder-diff {
   display: flex;
   flex-direction: column;
-  padding: 0 !important;
+}
+/* Beat the core `.view-content` padding by specificity instead of !important. */
+.workspace-leaf-content[data-type='vcoder-diff'] .view-content.vcoder-diff {
+  padding: 0;
 }
 .vcoder-diff-header {
   position: sticky;

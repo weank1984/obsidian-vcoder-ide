@@ -2,8 +2,8 @@ name: Release
 
 # Push a tag equal to manifest.json "version" (no "v" prefix), e.g.:
 #   npm run release -- 0.1.1   (bumps manifest/versions/package, commits, tags)
-#   git push --follow-tags
-# BRAT installs main.js / manifest.json / styles.css from the matching release.
+#   git push && git push origin <version>   (push the tag on its own so this workflow fires)
+# Obsidian installs main.js / manifest.json / styles.css from the matching release.
 on:
   push:
     tags:
@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
 
 jobs:
   release:
@@ -34,6 +36,14 @@ jobs:
           if [ "$v" != "${GITHUB_REF_NAME}" ]; then
             echo "tag ${GITHUB_REF_NAME} != manifest.json version $v"; exit 1
           fi
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            main.js
+            manifest.json
+            styles.css
 
       - name: Create release
         env:
