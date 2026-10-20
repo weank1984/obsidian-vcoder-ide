@@ -1,6 +1,6 @@
 {
   "name": "obsidian-vcoder-ide",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Connect an Obsidian vault to the vcoder CLI (/ide): selection sync, diff review, note diagnostics, openFile.",
   "main": "main.js",

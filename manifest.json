@@ -1,7 +1,7 @@
 {
   "id": "vcoder-ide",
   "name": "vcoder IDE",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minAppVersion": "1.7.2",
   "description": "Connect your vault to the vcoder CLI: share selections, review proposed edits as diffs, surface broken links and note lint as diagnostics.",
   "author": "VoyahAGI",
