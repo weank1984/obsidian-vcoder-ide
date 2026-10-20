@@ -13,9 +13,9 @@ export default defineConfig([
       },
     },
     rules: {
-      // "vcoder" is a lowercase product name and "/ide" is a CLI command;
-      // the heuristic wants "Vcoder" / "/IDE".
-      'obsidianmd/ui/sentence-case': ['warn', { brands: ['vcoder', 'Obsidian'], ignoreWords: ['vcoder'], ignoreRegex: ['/ide'] }],
+      // "vcoder" (CLI command) / "VCoder" (plugin name) are product names and
+      // "/ide" is a CLI command; the heuristic would rewrite them.
+      'obsidianmd/ui/sentence-case': ['warn', { brands: ['Obsidian'], ignoreWords: ['vcoder', 'VCoder'], ignoreRegex: ['/ide'] }],
     },
   },
 ])
