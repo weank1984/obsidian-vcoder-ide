@@ -81,7 +81,6 @@ export default class VcoderIdePlugin extends Plugin {
       serverVersion: this.manifest.version,
       instructions: () => buildInstructions(host),
       tools: buildTools({ host, diffs: this.diffs, absPath: p => this.absPath(p) }),
-      log: (msg, extra) => console.debug(`[vcoder-ide] ${msg}`, extra ?? ''),
     })
     server.on('connection', () => {
       this.updateStatus()

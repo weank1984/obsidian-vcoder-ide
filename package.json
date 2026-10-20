@@ -9,7 +9,8 @@
     "build": "tsc --noEmit && node esbuild.config.mjs --production",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "fake-ide": "node scripts/fake-ide.mjs"
+    "fake-ide": "node scripts/fake-ide.mjs",
+    "release": "node scripts/release.mjs"
   },
   "keywords": [
     "obsidian",

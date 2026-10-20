@@ -12,9 +12,35 @@ Connect an Obsidian vault to the [vcoder](https://code.voyah.com) CLI through `/
 
 ## Install
 
-1. Build the plugin: `npm install && npm run build`.
-2. Copy `main.js`, `manifest.json` and `styles.css` into `<vault>/.obsidian/plugins/vcoder-ide/`. For development, symlink this repo there instead.
-3. In Obsidian, open **Settings → Community plugins** and enable **vcoder IDE**.
+This plugin is distributed privately with [BRAT](https://github.com/TfTHacker/obsidian42-brat). It is not listed in the Obsidian community directory.
+
+### With BRAT (recommended, auto-updates)
+
+1. **Get access.** Ask the repo owner to add you as a collaborator on `weank1984/obsidian-vcoder-ide`.
+2. **Create a GitHub token.**
+   - Go to GitHub → Settings → Developer settings → **Fine-grained token**.
+   - Repository access: only this repo.
+   - Permission: **Contents: Read-only**.
+3. **Install BRAT.** In Obsidian, open **Settings → Community plugins → Browse**, then install and enable **BRAT**.
+4. **Add the token.** In BRAT settings, paste the token into **Personal access token**.
+5. **Add the plugin.**
+   - Run **BRAT: Add a beta plugin for testing**.
+   - Enter `weank1984/obsidian-vcoder-ide`.
+   - Choose the latest version.
+6. **Enable it.** Turn on **vcoder IDE** under **Settings → Community plugins**.
+
+BRAT checks for new releases on startup. You can also run **BRAT: Check for updates to all beta plugins** to update now.
+
+### Manual
+
+1. Download `main.js`, `manifest.json` and `styles.css` from the latest [release](https://github.com/weank1984/obsidian-vcoder-ide/releases).
+2. Put them in `<vault>/.obsidian/plugins/vcoder-ide/`.
+3. Enable the plugin.
+
+### From source (development)
+
+1. Run `npm install && npm run build`.
+2. Symlink `main.js`, `manifest.json` and `styles.css` into `<vault>/.obsidian/plugins/vcoder-ide/`.
 
 ## Use
 
@@ -42,6 +68,11 @@ vcoder          # then run /ide and pick "Obsidian"
 | **Diff layout** | Unified or side by side. |
 | **Diagnostics** | Turn each of the four rule groups on or off, and set the vault scan limit. |
 
+## Network use and files outside the vault
+
+- **Network.** The plugin runs a WebSocket server on **127.0.0.1 only**. Only the vcoder CLI on the same machine connects to it. The plugin makes no outbound requests and contacts no remote services.
+- **Files outside the vault.** The plugin writes one lockfile, `~/.vcoder/ide/<port>.lock` (or `$VCODER_HOME/ide`). vcoder reads this file to discover the running Obsidian instance. The plugin deletes it when it unloads.
+
 ## Security
 
 - The WebSocket server binds to **127.0.0.1** only. It uses a random port and a per-start random token (`crypto.randomUUID`).
@@ -67,6 +98,15 @@ npm test           # vitest: lockfile, MCP server wire contract, diff, diagnosti
 npm run build      # tsc + production bundle
 npm run fake-ide -- /tmp/vault   # headless IDE peer (FAKE_IDE_DIFF=accept|reject|hold) for testing a real vcoder CLI
 ```
+
+### Releasing
+
+```sh
+npm run release -- 0.1.1   # bump manifest/versions/package, test, build, commit, tag
+git push --follow-tags     # CI (.github/workflows/release.yml) publishes the GitHub release
+```
+
+The tag must equal the `manifest.json` version, with no `v` prefix. BRAT users get the new version on their next update check.
 
 - `src/core/` has no Obsidian imports and is fully unit tested.
 - `src/obsidian/` is the adapter layer (views, editor extension, metadata cache).

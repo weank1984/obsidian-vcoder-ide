@@ -4,3 +4,4 @@ data.json
 test-vault/.obsidian/
 *.log
 .DS_Store
+test-vault/.vcoder/
